@@ -1,1 +1,331 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Press Start 2P", "Courier New", monospace;
+  --font-led: "VT323", "Courier New", monospace;
+  --font-body: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: #0c1322;
+  background-image:
+    radial-gradient(1000px 520px at 10% -8%, rgba(255, 176, 0, 0.1), transparent 62%),
+    radial-gradient(900px 540px at 92% 4%, rgba(45, 212, 191, 0.09), transparent 60%),
+    radial-gradient(800px 700px at 50% 112%, rgba(255, 77, 109, 0.08), transparent 62%);
+  background-attachment: fixed;
+  color: #dbe4f5;
+}
+
+/* ---- ambient layers ---- */
+.arena-grid {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 18%, black 28%, transparent 76%);
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 18%, black 28%, transparent 76%);
+}
+
+.scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.026) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+.crt-sweep {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(120, 200, 255, 0.04) 45%,
+    rgba(120, 200, 255, 0.085) 50%,
+    rgba(120, 200, 255, 0.04) 55%,
+    transparent
+  );
+  height: 22vh;
+  animation: sweep 9s linear infinite;
+}
+@keyframes sweep {
+  0% {
+    top: -25%;
+  }
+  100% {
+    top: 115%;
+  }
+}
+
+.chroma {
+  text-shadow:
+    2px 0 0 rgba(56, 225, 255, 0.35),
+    -2px 0 0 rgba(255, 84, 84, 0.32),
+    0 0 22px rgba(255, 176, 0, 0.22);
+}
+
+/* ---- win95 bevels ---- */
+.bevel-frame {
+  background: #c0c0c0;
+  box-shadow:
+    inset 3px 3px 0 #ffffff,
+    inset -3px -3px 0 #6e6e6e,
+    0 18px 50px rgba(2, 6, 16, 0.6),
+    0 0 0 1px #3a4258;
+}
+.bevel-well {
+  background: #c0c0c0;
+  box-shadow:
+    inset 2px 2px 0 #6e6e6e,
+    inset -2px -2px 0 #ffffff;
+}
+.bevel-btn {
+  background: #c0c0c0;
+  box-shadow:
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #6e6e6e;
+}
+.bevel-btn:active {
+  box-shadow:
+    inset 2px 2px 0 #6e6e6e,
+    inset -2px -2px 0 #ffffff;
+}
+
+.cell-covered {
+  background: #c3c3c3;
+  box-shadow:
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #7b7b7b;
+}
+.cell-covered:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.cell-covered:active:not(:disabled) {
+  background: #b1b1b1;
+  box-shadow: inset 1px 1px 0 #848484;
+}
+.cell-open {
+  background: #c8c8c8;
+  box-shadow: inset 1px 1px 0 #8f8f8f;
+}
+.cell-hit {
+  background: #e23b2e;
+  box-shadow: inset 1px 1px 0 #7e150c;
+}
+
+.led-well {
+  background: #170608;
+  box-shadow:
+    inset 2px 2px 0 #000000,
+    inset -1px -1px 0 #431216,
+    0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.led-flicker {
+  animation: ledflk 4s steps(2) infinite;
+}
+@keyframes ledflk {
+  0%,
+  91% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.8;
+  }
+  94%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.tab {
+  background: #b3b3b3;
+  color: #4d4d4d;
+  box-shadow:
+    inset 1px 1px 0 #f2f2f2,
+    inset -1px -1px 0 #777777;
+}
+.tab-active {
+  background: #c9c9c9;
+  color: #b45309;
+  box-shadow:
+    inset 1px 1px 0 #777777,
+    inset -1px -1px 0 #f2f2f2,
+    0 2px 0 #b45309;
+}
+
+/* ---- motion ---- */
+.cell-pop {
+  animation: pop 0.3s cubic-bezier(0.2, 1.5, 0.4, 1) backwards;
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.15;
+  }
+  70% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.flag-pop {
+  animation: flagpop 0.18s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
+}
+@keyframes flagpop {
+  0% {
+    transform: scale(0.3) rotate(-30deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+.shake {
+  animation: shake 0.55s;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  15% {
+    transform: translate(-6px, 2px);
+  }
+  30% {
+    transform: translate(5px, -2px);
+  }
+  45% {
+    transform: translate(-4px, 1px);
+  }
+  60% {
+    transform: translate(3px, -1px);
+  }
+  75% {
+    transform: translate(-2px, 0);
+  }
+}
+
+.win-glow {
+  animation: winglow 1.6s ease-in-out infinite;
+}
+@keyframes winglow {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 0 2px rgba(61, 220, 132, 0),
+      0 0 0 rgba(61, 220, 132, 0);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 2px rgba(61, 220, 132, 0.55),
+      0 0 34px rgba(61, 220, 132, 0.28);
+  }
+}
+
+.blink {
+  animation: blinkc 1.06s steps(1) infinite;
+}
+@keyframes blinkc {
+  50% {
+    opacity: 0;
+  }
+}
+
+.pulse-dot {
+  animation: pulsedot 1.6s ease-in-out infinite;
+}
+@keyframes pulsedot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.78);
+  }
+}
+
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.conf-bit {
+  position: fixed;
+  top: -12px;
+  width: 7px;
+  height: 7px;
+  z-index: 60;
+  pointer-events: none;
+  animation: confall linear forwards;
+}
+@keyframes confall {
+  0% {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(660deg);
+    opacity: 0;
+  }
+}
+
+.rise {
+  animation: rise 0.55s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.recburst {
+  animation: recburst 1s steps(2) infinite;
+}
+@keyframes recburst {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* ---- scrollbars ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #33415e transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #33415e;
+}
