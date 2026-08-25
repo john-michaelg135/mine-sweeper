@@ -91,12 +91,12 @@ export function IconMine({ size = 16, color = "#141414" }: { size?: number; colo
   );
 }
 
-export function IconFlag({ size = 16 }: { size?: number }) {
+export function IconFlag({ size = 16, ink = "#1c1c1c" }: { size?: number; ink?: string }) {
   return (
     <svg viewBox="0 0 20 20" width={size} height={size} aria-hidden>
-      <rect x="9.2" y="3" width="1.8" height="12" fill="#1c1c1c" />
+      <rect x="9.2" y="3" width="1.8" height="12" fill={ink} />
       <path d="M11 3.4l6 2.8-6 2.8z" fill="#e02020" />
-      <rect x="5.5" y="15" width="9" height="2.2" fill="#1c1c1c" />
+      <rect x="5.5" y="15" width="9" height="2.2" fill={ink} />
     </svg>
   );
 }

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { NUM_COLORS } from "../game/types";
+import type { BoardTheme } from "../game/themes";
 import { IconFlag, IconMine } from "./Bits";
 
 export interface CellView {
@@ -15,13 +15,14 @@ interface CellProps {
   v: CellView;
   size: number;
   interactive: boolean;
+  theme: BoardTheme;
   onReveal: () => void;
   onFlag: () => void;
   onDown: () => void;
   onUp: () => void;
 }
 
-const Cell = memo(function Cell({ v, size, interactive, onReveal, onFlag, onDown, onUp }: CellProps) {
+const Cell = memo(function Cell({ v, size, interactive, theme, onReveal, onFlag, onDown, onUp }: CellProps) {
   const { state, count, flagged, misflagged, bombVisible, delay } = v;
   const icon = Math.round(size * 0.56);
 
@@ -46,17 +47,17 @@ const Cell = memo(function Cell({ v, size, interactive, onReveal, onFlag, onDown
       >
         {misflagged ? (
           <span className="relative flex items-center justify-center">
-            <IconMine size={icon} color="#3c3c3c" />
+            <IconMine size={icon} color={theme.inkDim} />
             <svg className="absolute" viewBox="0 0 20 20" width={icon + 4} height={icon + 4} aria-hidden>
               <path d="M4 4l12 12M16 4L4 16" stroke="#e02020" strokeWidth="2.4" strokeLinecap="round" />
             </svg>
           </span>
         ) : flagged ? (
           <span className="flag-pop">
-            <IconFlag size={icon} />
+            <IconFlag size={icon} ink={theme.ink} />
           </span>
         ) : bombVisible ? (
-          <IconMine size={icon} />
+          <IconMine size={icon} color={theme.ink} />
         ) : null}
       </button>
     );
@@ -79,9 +80,9 @@ const Cell = memo(function Cell({ v, size, interactive, onReveal, onFlag, onDown
       role="gridcell"
     >
       {isHit ? (
-        <IconMine size={icon} color="#1c0503" />
+        <IconMine size={icon} color={theme.ink} />
       ) : count > 0 ? (
-        <span className="font-display leading-none" style={{ color: NUM_COLORS[count], fontSize }}>
+        <span className="font-display leading-none" style={{ color: theme.numbers[count], fontSize }}>
           {count}
         </span>
       ) : null}
@@ -96,13 +97,26 @@ interface BoardProps {
   cells: CellView[];
   interactive: boolean;
   won: boolean;
+  theme: BoardTheme;
   onReveal: (i: number) => void;
   onFlag: (i: number) => void;
   onDown: () => void;
   onUp: () => void;
 }
 
-export default function Board({ rows, cols, size, cells, interactive, won, onReveal, onFlag, onDown, onUp }: BoardProps) {
+export default function Board({
+  rows,
+  cols,
+  size,
+  cells,
+  interactive,
+  won,
+  theme,
+  onReveal,
+  onFlag,
+  onDown,
+  onUp,
+}: BoardProps) {
   return (
     <div className={`bevel-well inline-block p-1.5 ${won ? "win-glow" : ""}`}>
       <div
@@ -121,6 +135,7 @@ export default function Board({ rows, cols, size, cells, interactive, won, onRev
             v={v}
             size={size}
             interactive={interactive}
+            theme={theme}
             onReveal={() => onReveal(i)}
             onFlag={() => onFlag(i)}
             onDown={onDown}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import type { RunRecord, Tier } from "./game/types";
 import { DIFFICULTIES, TIER_ORDER, fmtTime } from "./game/types";
 import type { ClickResult, NewGame } from "./game/server";
@@ -26,6 +26,7 @@ import {
   type Face,
 } from "./components/Bits";
 import { LeaderboardPanel, StatsPanel, VerifyLog, type LogLine } from "./components/SidePanels";
+import { DEFAULT_THEME, THEMES } from "./game/themes";
 
 type Status = "idle" | "playing" | "won" | "lost";
 const CONF_COLORS = ["#ffb000", "#2dd4bf", "#ff5f56", "#3ddc84", "#f5c542", "#5fd7e8"];
@@ -61,6 +62,14 @@ export default function App() {
     }
   });
   const [handle, setHandle] = useState(loadHandle);
+  const [themeId, setThemeId] = useState(() => {
+    try {
+      return localStorage.getItem("arena.theme") ?? DEFAULT_THEME.id;
+    } catch {
+      return DEFAULT_THEME.id;
+    }
+  });
+  const theme = THEMES.find((t) => t.id === themeId) ?? DEFAULT_THEME;
   const [lbTier, setLbTier] = useState<Tier>("beginner");
   const [lbRows, setLbRows] = useState<RunRecord[]>(() => getLeaderboard("beginner"));
   const [lbVersion, setLbVersion] = useState(0);
@@ -348,6 +357,20 @@ export default function App() {
     if (h) saveHandle(h);
   }, []);
 
+  const changeTheme = useCallback(
+    (id: string) => {
+      setThemeId(id);
+      try {
+        localStorage.setItem("arena.theme", id);
+      } catch {
+        /* ignore */
+      }
+      const t = THEMES.find((x) => x.id === id);
+      if (t) pushLog(`> skin loaded — ${t.name} [${t.tag}]`, "cyan");
+    },
+    [pushLog]
+  );
+
   const changeLbTier = useCallback((t: Tier) => {
     setLbTier(t);
     setLbRows(getLeaderboard(t));
@@ -419,6 +442,7 @@ export default function App() {
       m ? `${m.handle} holds INT WR — ${fmtTime(m.timeMs)}` : "",
       e ? `${e.handle} holds EXP WR — ${fmtTime(e.timeMs)}` : "",
       "bomb layouts generated on demand · first click is always safe",
+      "skin kit v2 loaded — 5 cabinet finishes in rotation // switch anytime",
       "finish times stamped & verified server-side",
       pbs.expert !== undefined ? `your EXP PB: ${fmtTime(pbs.expert as number)} — beat it` : "clear a grid to post a verified time",
       `${totalVerifiedRuns()} runs verified on the global shard`,
@@ -524,14 +548,18 @@ export default function App() {
         {/* cabinet */}
         <section
           className={`rise bevel-frame relative mx-auto w-fit select-none p-3 sm:p-4 ${shaking ? "shake" : ""}`}
+          style={{ ...(theme.vars as CSSProperties) }}
           onContextMenu={(e) => e.preventDefault()}
         >
           {/* fake menu strip */}
-          <div className="flex items-center justify-between px-1 pb-2 text-[11px] text-[#3c3c3c]">
+          <div
+            className="flex items-center justify-between px-1 pb-2 text-[11px]"
+            style={{ color: "var(--ms-title-ink, #3c3c3c)" }}
+          >
             <span className="tracking-wide">
               <u>G</u>ame&nbsp;&nbsp;<u>B</u>oard&nbsp;&nbsp;<u>H</u>elp
             </span>
-            <span className="font-led text-[15px] text-[#5a5a5a]">
+            <span className="font-led text-[15px] opacity-80">
               SESSION #{session.boardId} · EDGE LAG {ping}MS
             </span>
           </div>
@@ -556,7 +584,7 @@ export default function App() {
                   </span>
                   <span className="mt-1 flex items-center justify-center gap-1 text-[10px] font-bold tracking-wider">
                     {d.cols}×{d.rows}
-                    <IconMine size={10} color={active ? "#b45309" : "#6b6b6b"} />
+                    <IconMine size={10} color={active ? "var(--ms-tab-a-ink, #b45309)" : "var(--ms-tab-ink, #6b6b6b)"} />
                     {d.mines}
                   </span>
                 </button>
@@ -618,6 +646,7 @@ export default function App() {
               cells={cells}
               interactive={status === "idle" || status === "playing"}
               won={status === "won"}
+              theme={theme}
               onReveal={onReveal}
               onFlag={toggleFlag}
               onDown={onPress}
@@ -629,14 +658,86 @@ export default function App() {
           {/* status strip */}
           <div className="mt-2 flex items-center justify-between gap-3 px-1">
             <span
-              className={`font-led text-[16px] tracking-wide ${
-                status === "won" ? "text-[#1a7a42]" : status === "lost" ? "text-[#a11212]" : "text-[#4a4a4a]"
-              }`}
+              className="font-led text-[16px] tracking-wide"
+              style={{
+                color:
+                  status === "won"
+                    ? "var(--ms-num-2, #1a7a42)"
+                    : status === "lost"
+                      ? "#c21807"
+                      : "var(--ms-title-ink, #4a4a4a)",
+              }}
             >
               {statusLine}
             </span>
-            <span className="hidden whitespace-nowrap text-[10px] font-bold tracking-wider text-[#6b6b6b] sm:block">
+            <span
+              className="hidden whitespace-nowrap text-[10px] font-bold tracking-wider opacity-70 sm:block"
+              style={{ color: "var(--ms-title-ink, #6b6b6b)" }}
+            >
               [R]ESET · [F]LAG · [M]UTE
+            </span>
+          </div>
+
+          {/* board skins */}
+          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-black/20 px-1 pt-2.5">
+            <span
+              className="text-[9px] font-bold tracking-[0.22em]"
+              style={{ color: "var(--ms-title-ink, #5a5a5a)", opacity: 0.75 }}
+            >
+              BOARD SKIN
+            </span>
+            {THEMES.map((t) => {
+              const activeSkin = t.id === theme.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => changeTheme(t.id)}
+                  title={`${t.name} — ${t.tag}`}
+                  aria-pressed={activeSkin}
+                  className={`flex flex-col items-center gap-1 px-1 py-0.5 transition-all duration-150 ${
+                    activeSkin ? "-translate-y-0.5" : "opacity-60 hover:-translate-y-0.5 hover:opacity-100"
+                  }`}
+                >
+                  <span
+                    className="flex overflow-hidden"
+                    style={{
+                      border: `2px solid ${activeSkin ? "#ffb000" : "rgba(0,0,0,0.45)"}`,
+                      boxShadow: activeSkin ? "0 0 12px rgba(255,176,0,0.4)" : "none",
+                    }}
+                  >
+                    <span style={{ width: 13, height: 15, background: t.vars["--ms-frame"] }} />
+                    <span
+                      style={{
+                        width: 13,
+                        height: 15,
+                        background: t.vars["--ms-cov"],
+                        boxShadow: `inset 1px 1px 0 ${t.vars["--ms-cov-hi"]}, inset -1px -1px 0 ${t.vars["--ms-cov-lo"]}`,
+                      }}
+                    />
+                    <span
+                      className="flex items-center justify-center"
+                      style={{ width: 13, height: 15, background: t.vars["--ms-open"] }}
+                    >
+                      <span className="font-display" style={{ color: t.numbers[1], fontSize: 8, lineHeight: 1 }}>
+                        3
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    className="font-display"
+                    style={{ fontSize: 6, color: activeSkin ? "#ffb000" : "var(--ms-title-ink, #5a5a5a)" }}
+                  >
+                    {t.name.split(" ")[0]}
+                  </span>
+                </button>
+              );
+            })}
+            <span
+              className="ml-auto hidden font-led text-[14px] sm:block"
+              style={{ color: "var(--ms-title-ink, #5a5a5a)", opacity: 0.8 }}
+            >
+              {theme.tag}
             </span>
           </div>
         </section>

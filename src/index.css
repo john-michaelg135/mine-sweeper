@@ -78,20 +78,20 @@ body {
     0 0 22px rgba(255, 176, 0, 0.22);
 }
 
-/* ---- win95 bevels ---- */
+/* ---- win95 bevels (theme-able via --ms-* vars) ---- */
 .bevel-frame {
-  background: #c0c0c0;
+  background: var(--ms-frame, #c0c0c0);
   box-shadow:
-    inset 3px 3px 0 #ffffff,
-    inset -3px -3px 0 #6e6e6e,
+    inset 3px 3px 0 var(--ms-hi, #ffffff),
+    inset -3px -3px 0 var(--ms-lo, #6e6e6e),
     0 18px 50px rgba(2, 6, 16, 0.6),
-    0 0 0 1px #3a4258;
+    0 0 0 1px var(--ms-edge, #3a4258);
 }
 .bevel-well {
-  background: #c0c0c0;
+  background: var(--ms-well, #c0c0c0);
   box-shadow:
-    inset 2px 2px 0 #6e6e6e,
-    inset -2px -2px 0 #ffffff;
+    inset 2px 2px 0 var(--ms-lo, #6e6e6e),
+    inset -2px -2px 0 var(--ms-hi, #ffffff);
 }
 .bevel-btn {
   background: #c0c0c0;
@@ -106,25 +106,25 @@ body {
 }
 
 .cell-covered {
-  background: #c3c3c3;
+  background: var(--ms-cov, #c3c3c3);
   box-shadow:
-    inset 2px 2px 0 #ffffff,
-    inset -2px -2px 0 #7b7b7b;
+    inset 2px 2px 0 var(--ms-cov-hi, #ffffff),
+    inset -2px -2px 0 var(--ms-cov-lo, #7b7b7b);
 }
 .cell-covered:hover:not(:disabled) {
   filter: brightness(1.08);
 }
 .cell-covered:active:not(:disabled) {
-  background: #b1b1b1;
-  box-shadow: inset 1px 1px 0 #848484;
+  background: var(--ms-cov-act, #b1b1b1);
+  box-shadow: inset 1px 1px 0 var(--ms-cov-lo, #848484);
 }
 .cell-open {
-  background: #c8c8c8;
-  box-shadow: inset 1px 1px 0 #8f8f8f;
+  background: var(--ms-open, #c8c8c8);
+  box-shadow: inset 1px 1px 0 var(--ms-open-in, #8f8f8f);
 }
 .cell-hit {
-  background: #e23b2e;
-  box-shadow: inset 1px 1px 0 #7e150c;
+  background: var(--ms-hit, #e23b2e);
+  box-shadow: inset 1px 1px 0 var(--ms-hit-in, #7e150c);
 }
 
 .led-well {
@@ -152,19 +152,19 @@ body {
 }
 
 .tab {
-  background: #b3b3b3;
-  color: #4d4d4d;
+  background: var(--ms-tab, #b3b3b3);
+  color: var(--ms-tab-ink, #4d4d4d);
   box-shadow:
-    inset 1px 1px 0 #f2f2f2,
-    inset -1px -1px 0 #777777;
+    inset 1px 1px 0 var(--ms-tab-hi, #f2f2f2),
+    inset -1px -1px 0 var(--ms-tab-lo, #777777);
 }
 .tab-active {
-  background: #c9c9c9;
-  color: #b45309;
+  background: var(--ms-tab-a, #c9c9c9);
+  color: var(--ms-tab-a-ink, #b45309);
   box-shadow:
-    inset 1px 1px 0 #777777,
-    inset -1px -1px 0 #f2f2f2,
-    0 2px 0 #b45309;
+    inset 1px 1px 0 var(--ms-tab-lo, #777777),
+    inset -1px -1px 0 var(--ms-tab-hi, #f2f2f2),
+    0 2px 0 var(--ms-tab-a-ink, #b45309);
 }
 
 /* ---- motion ---- */
