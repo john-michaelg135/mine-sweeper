@@ -1,4 +1,5 @@
-import { ArrowUpRight, ArrowRight, Flag, MousePointer2, Sparkles, Bomb } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Flag, MousePointer2, Sparkles } from "lucide-react";
+import { IconMine } from "./Bits";
 import "./Welcome.css";
 
 const preview = [
@@ -16,7 +17,7 @@ export default function Welcome({ onPlay }: { onPlay: () => void }) {
   return (
     <div className="welcome">
       <header className="welcome-nav">
-        <a className="welcome-brand" href="#"><span className="welcome-mark"><Bomb size={21} /></span> MINESWEEPER<span className="welcome-brand-tag">ARENA</span></a>
+        <a className="welcome-brand" href="#" aria-label="Global Speedrun Arena home"><IconMine size={18} color="#ffb000" /><span>GLOBAL SPEEDRUN ARENA</span></a>
         <nav aria-label="Welcome navigation"><a href="#how-to-play">How to play</a><button onClick={onPlay}>Enter arena <ArrowUpRight size={16} /></button></nav>
       </header>
 

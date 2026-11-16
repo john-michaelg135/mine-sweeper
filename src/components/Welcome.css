@@ -3,9 +3,8 @@
 .welcome button { cursor: pointer; font: inherit; }
 .welcome a:focus-visible, .welcome button:focus-visible { outline: 3px solid #ffbe45; outline-offset: 6px; }
 .welcome-nav { max-width: 1240px; margin: auto; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.welcome-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; letter-spacing: 1px; }
-.welcome-mark { display: grid; place-items: center; color: #10151f; background: var(--welcome-amber); width: 36px; height: 36px; border-radius: 10px; }
-.welcome-brand-tag { color: #8892a4; font-size: 10px; border-left: 1px solid #343b48; padding-left: 10px; }
+.welcome a.welcome-brand { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-size: 10px; font-weight: 400; letter-spacing: .32em; line-height: 1.6; color: #53d6eb; }
+.welcome-brand svg { flex-shrink: 0; }
 .welcome-nav nav { display: flex; gap: 30px; align-items: center; font-size: 13px; color: #abb3c1; }
 .welcome-nav button { display: flex; align-items: center; gap: 10px; border: 1px solid #343b48; border-radius: 8px; background: transparent; padding: 10px 16px; color: #f5f4ef; }
 .welcome-nav button:hover { border-color: var(--welcome-amber); }
@@ -56,3 +55,4 @@
 @media (max-width: 800px) { .welcome-hero { gap: 35px; padding-top: 50px; } .welcome h1 { letter-spacing: -2px; font-size: 44px; } .welcome-brand-tag { display: none; } .welcome-steps { gap: 20px; } .welcome-actions { gap: 18px; } .welcome-play { gap: 16px; } }
 @media (max-width: 650px) { .welcome-nav { padding: 20px; } .welcome-brand { font-size: 11px; gap: 7px; } .welcome-nav nav > a { display: none; } .welcome-nav button { font-size: 11px; padding: 9px; } .welcome-hero { grid-template-columns: 1fr; padding: 42px 24px 76px; gap: 45px; } .welcome h1 { font-size: clamp(42px, 10.5vw, 64px); } .welcome-copy > p { font-size: 15px; } .welcome-art { width: min(100%, 400px); justify-self: center; padding: 15px; } .welcome-float { right: 0; } .welcome-guide, .welcome-footer { margin-inline: 24px; } .welcome-steps { grid-template-columns: 1fr; gap: 28px; } .welcome-steps p { max-width: none; } .welcome-footer { flex-direction: column; gap: 6px; } }
 @media (prefers-reduced-motion: reduce) { .welcome-play { transition: none; } }
+@media (max-width: 650px) { .welcome a.welcome-brand { font-size: 8px; letter-spacing: .2em; gap: 8px; } .welcome-nav { flex-wrap: wrap; gap: 16px; } }
