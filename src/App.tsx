@@ -27,11 +27,27 @@ import {
 } from "./components/Bits";
 import { LeaderboardPanel, StatsPanel, VerifyLog, type LogLine } from "./components/SidePanels";
 import { DEFAULT_THEME, THEMES } from "./game/themes";
+import Welcome from "./components/Welcome";
 
 type Status = "idle" | "playing" | "won" | "lost";
 const CONF_COLORS = ["#ffb000", "#2dd4bf", "#ff5f56", "#3ddc84", "#f5c542", "#5fd7e8"];
 
 export default function App() {
+  const [welcomed, setWelcomed] = useState(() => {
+    try { return localStorage.getItem("arena.welcomed") === "1"; }
+    catch { return false; }
+  });
+
+  const enterArena = () => {
+    try { localStorage.setItem("arena.welcomed", "1"); } catch { /* Storage is optional. */ }
+    setWelcomed(true);
+    window.scrollTo(0, 0);
+  };
+
+  return welcomed ? <Arena /> : <Welcome onPlay={enterArena} />;
+}
+
+function Arena() {
   /* ---------------- core game state ---------------- */
   const [tier, setTier] = useState<Tier>("beginner");
   const [session, setSession] = useState<NewGame>(() => createGame("beginner"));
